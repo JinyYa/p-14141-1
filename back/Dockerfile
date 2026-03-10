@@ -79,3 +79,4 @@ ENTRYPOINT ["java", \
   "-XX:+AlwaysPreTouch", \
   "-Dspring.profiles.active=prod", \
   "org.springframework.boot.loader.launch.JarLauncher"]
+
