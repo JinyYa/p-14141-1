@@ -1,8 +1,7 @@
-name: p14141_dev
+name: p_14141_1_dev
 services:
   redis_1:
     image: redis:latest
-    container_name: redis_1
     ports:
       - "6379:6379"
     environment:
@@ -10,7 +9,6 @@ services:
     command: redis-server --maxmemory 50mb --maxmemory-policy allkeys-lru --requirepass lldj123414
   db_1:
     image: jangka512/pgj:latest
-    container_name: db_1
     ports:
       - "5432:5432"
     environment:
