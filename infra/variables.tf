@@ -10,5 +10,5 @@ variable "prefix" {
 
 variable "app_1_domain" {
   description = "app_1 domain"
-  default     = "api.mall.jinyyang.site"
+  default = "api.mall2.jinyyang.site"
 }
