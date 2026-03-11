@@ -28,17 +28,8 @@ RUN chmod +x gradlew && ./gradlew dependencies --no-daemon
 COPY .env.test .env.test
 COPY src src
 
-# PG 초기화 → 시작 → 테스트 DB 생성 → 빌드(테스트 포함) → PG 종료
-RUN set -e \
- && PGDATA=/var/lib/postgresql/data \
- && mkdir -p "$PGDATA" && chown postgres:postgres "$PGDATA" \
- && su postgres -c "initdb -D $PGDATA --auth=trust" \
- && su postgres -c "pg_ctl -D $PGDATA start -o '-c listen_addresses=localhost' -w" \
- && su postgres -c "psql -c \"ALTER USER postgres PASSWORD 'lldj123414';\"" \
- && su postgres -c "psql -c \"CREATE DATABASE blog_test;\"" \
- && redis-server --daemonize yes --requirepass lldj123414 \
- && ./gradlew build -x test --no-daemon \
- && su postgres -c "pg_ctl -D $PGDATA stop -w"
+# 빌드(테스트 스킵)
+RUN ./gradlew build -x test --no-daemon
 
 # =========================
 # 2️⃣ Layer Extract Stage
