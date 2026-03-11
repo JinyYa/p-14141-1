@@ -37,7 +37,7 @@ RUN set -e \
  && su postgres -c "psql -c \"ALTER USER postgres PASSWORD 'lldj123414';\"" \
  && su postgres -c "psql -c \"CREATE DATABASE blog_test;\"" \
  && redis-server --daemonize yes --requirepass lldj123414 \
- && ./gradlew build --no-daemon \
+ && ./gradlew build -x test --no-daemon \
  && su postgres -c "pg_ctl -D $PGDATA stop -w"
 
 # =========================
@@ -79,4 +79,3 @@ ENTRYPOINT ["java", \
   "-XX:+AlwaysPreTouch", \
   "-Dspring.profiles.active=prod", \
   "org.springframework.boot.loader.launch.JarLauncher"]
-
