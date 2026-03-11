@@ -373,6 +373,36 @@ class ApiV1PostControllerTest {
         }
 
         @Test
+        @WithUserDetails("user1")
+        fun `본인 글은 조회수가 증가하지 않는다`() {
+            val actor = actorFacade.findByUsername("user1").getOrThrow()
+            val post = postFacade.write(actor, "본인 글", "내용", true, true)
+            val hitCountBefore = post.hitCount
+
+            mvc.post("/post/api/v1/posts/${post.id}/hit").andExpect {
+                match(handler().handlerType(ApiV1PostController::class.java))
+                match(handler().methodName("incrementHit"))
+                status { isOk() }
+                jsonPath("$.msg") { value("본인 글은 조회수가 증가하지 않습니다.") }
+                jsonPath("$.data.hitCount") { value(hitCountBefore) }
+            }
+        }
+
+        @Test
+        @WithUserDetails("user3")
+        fun `다른 사람 글은 조회수가 증가한다`() {
+            val author = actorFacade.findByUsername("user1").getOrThrow()
+            val post = postFacade.write(author, "다른 사람 글", "내용", true, true)
+            val hitCountBefore = post.hitCount
+
+            mvc.post("/post/api/v1/posts/${post.id}/hit").andExpect {
+                status { isOk() }
+                jsonPath("$.msg") { value("조회수가 증가했습니다.") }
+                jsonPath("$.data.hitCount") { value(hitCountBefore + 1) }
+            }
+        }
+
+        @Test
         fun `실패 - 존재하지 않는 글`() {
             mvc.post("/post/api/v1/posts/${Int.MAX_VALUE}/hit").andExpect {
                 status { isNotFound() }
