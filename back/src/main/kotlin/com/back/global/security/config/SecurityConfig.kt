@@ -67,6 +67,8 @@ class SecurityConfig(
                 }
             }
 
+            cors { corsConfigurationSource = corsConfigurationSource() }
+
             addFilterBefore<UsernamePasswordAuthenticationFilter>(customAuthenticationFilter)
 
             exceptionHandling {
