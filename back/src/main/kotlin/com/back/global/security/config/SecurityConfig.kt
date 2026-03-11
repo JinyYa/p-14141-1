@@ -67,7 +67,7 @@ class SecurityConfig(
                 }
             }
 
-            cors { corsConfigurationSource = corsConfigurationSource() }
+            cors { corsConfigurationSource = this@SecurityConfig.corsConfigurationSource() }
 
             addFilterBefore<UsernamePasswordAuthenticationFilter>(customAuthenticationFilter)
 
