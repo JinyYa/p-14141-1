@@ -299,3 +299,8 @@ EOF
     Name = "${var.prefix}-ec2-1"
   }
 }
+
+output "ec2_1_public_ip" {
+  description = "EC2 Public IP"
+  value       = aws_instance.ec2_1.public_ip
+}
