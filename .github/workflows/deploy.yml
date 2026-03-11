@@ -210,7 +210,7 @@ jobs:
                   --arg domain "${APP_1_DOMAIN}" \
                   --arg host "${SLOT1}" \
                   --argjson port ${PORT_IN} \
-                  --argjson sseResponseBufferingOff ${NPMPLUS_SSE_RESPONSE_BUFFERING_OFF} \
+                  --argjson sseResponseBufferingOff ${{ env.NPMPLUS_SSE_RESPONSE_BUFFERING_OFF }} \
                   '{
                     domain_names: [$domain],
                     forward_scheme: "http",
@@ -304,7 +304,7 @@ jobs:
             NEW_CFG=$(echo "${CURRENT_CFG}" | jq \
               --arg host "${GREEN}" \
               --argjson port ${PORT_IN} \
-              --argjson sseResponseBufferingOff ${NPMPLUS_SSE_RESPONSE_BUFFERING_OFF} \
+              --argjson sseResponseBufferingOff ${{ env.NPMPLUS_SSE_RESPONSE_BUFFERING_OFF }} \
               '{
                 access_list_id,
                 advanced_config,
