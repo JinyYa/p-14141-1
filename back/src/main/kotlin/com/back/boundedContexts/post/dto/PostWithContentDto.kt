@@ -9,7 +9,7 @@ data class PostWithContentDto(
     val modifiedAt: Instant,
     val authorId: Int,
     val authorName: String,
-    val authorProfileImageUrl: String,
+    val authorProfileImgUrl: String,
     val title: String,
     val content: String,
     val published: Boolean,

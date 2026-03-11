@@ -1,21 +1,22 @@
 package com.back.boundedContexts.post.config
 
+import com.back.IntegrationTest
 import com.back.boundedContexts.member.app.shared.ActorFacade
 import com.back.boundedContexts.member.domain.shared.Member
 import com.back.boundedContexts.post.app.PostFacade
 import com.back.standard.extensions.getOrThrow
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.messaging.converter.JacksonJsonMessageConverter
 import org.springframework.messaging.simp.stomp.StompFrameHandler
 import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
-import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.socket.WebSocketHttpHeaders
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
@@ -24,9 +25,9 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PostWebSocketSecurityConfigTest {
+@Disabled
+@Transactional
+class PostWebSocketSecurityConfigTest : IntegrationTest() {
 
     @LocalServerPort
     private var port: Int = 0

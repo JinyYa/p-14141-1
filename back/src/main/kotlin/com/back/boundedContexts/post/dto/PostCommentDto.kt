@@ -10,7 +10,7 @@ data class PostCommentDto @JsonCreator constructor(
     val modifiedAt: Instant,
     val authorId: Int,
     val authorName: String,
-    val authorProfileImageUrl: String,
+    val authorProfileImgUrl: String,
     val postId: Int,
     val content: String,
     var actorCanModify: Boolean = false,

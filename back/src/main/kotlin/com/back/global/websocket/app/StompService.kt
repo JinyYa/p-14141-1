@@ -22,7 +22,11 @@ class StompService(
             mapOf("destination" to destination, "payload" to payload)
         )
 
-        redisTemplate.convertAndSend(CHANNEL, json)
+        try {
+            redisTemplate.convertAndSend(CHANNEL, json)
+        } catch (_: Exception) {
+            messagingTemplate.convertAndSend(destination, payload)
+        }
     }
 
     override fun onMessage(message: Message, pattern: ByteArray?) {

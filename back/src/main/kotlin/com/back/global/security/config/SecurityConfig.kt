@@ -42,6 +42,7 @@ class SecurityConfig(
                 memberSecurityConfigurer.configure(this)
                 postSecurityConfigurer.configure(this)
 
+                authorize("/sse/**", permitAll)
                 authorize("/*/api/*/adm/**", hasRole("ADMIN"))
                 authorize("/*/api/*/**", authenticated)
                 authorize(anyRequest, permitAll)
@@ -101,6 +102,7 @@ class SecurityConfig(
 
         return UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("/*/api/**", configuration)
+            registerCorsConfiguration("/sse/**", configuration)
         }
     }
 }

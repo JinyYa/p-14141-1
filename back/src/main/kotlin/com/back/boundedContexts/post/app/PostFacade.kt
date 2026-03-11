@@ -25,6 +25,7 @@ class PostFacade(
     private val postLikeRepository: PostLikeRepository,
     private val eventPublisher: EventPublisher,
     private val postStompService: PostStompService,
+    private val postSseService: PostSseService,
 ) {
     @Transactional(readOnly = true)
     fun count(): Long = postRepository.count()
@@ -65,6 +66,8 @@ class PostFacade(
     ) {
         post.modify(title, content, published, listed)
         postRepository.flush()
+
+        postStompService.notifyPostModified(post)
 
         eventPublisher.publish(
             PostModifiedEvent(UUID.randomUUID(), PostDto(post), MemberDto(actor))
@@ -145,8 +148,8 @@ class PostFacade(
         val previousHitCount = post.hitCount
         post.incrementHitCount()
 
-        if (post.published && previousHitCount == 99 && post.hitCount == 100) {
-            postStompService.notifyNewPost(post)
+        if (post.published && previousHitCount == 9 && post.hitCount == 10) {
+            postSseService.notifyNewPost(post)
         }
 
         return true

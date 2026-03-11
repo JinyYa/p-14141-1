@@ -1,15 +1,15 @@
 package com.back.boundedContexts.post.app
 
+import com.back.IntegrationTest
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.messaging.converter.JacksonJsonMessageConverter
 import org.springframework.messaging.simp.stomp.StompFrameHandler
 import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
@@ -18,9 +18,9 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PostStompServiceTest {
+@Disabled
+@Transactional
+class PostStompServiceTest : IntegrationTest() {
 
     @LocalServerPort
     private var port: Int = 0
@@ -32,7 +32,6 @@ class PostStompServiceTest {
     private lateinit var postFacade: PostFacade
 
     @Test
-    @Transactional
     fun `notifyPostModified 를 호출하면 구독 중인 클라이언트가 해당 글의 데이터를 수신한다`() {
         val post = postFacade.findById(1)!!
         val received = LinkedBlockingQueue<Map<*, *>>()

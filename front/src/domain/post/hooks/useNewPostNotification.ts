@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useAuthContext } from "@/global/auth/hooks/useAuth";
-import { subscribe } from "@/global/websocket/stompClient";
+import { subscribe } from "@/global/sse/sseClient";
 
 export interface PostNotification {
   id: number;
@@ -31,28 +31,18 @@ export function useNewPostNotification(
   }, [loginMember]);
 
   useEffect(() => {
-    let cancelled = false;
-    let subscription: { unsubscribe: () => void } | null = null;
-
-    subscribe("/topic/posts/new", (message) => {
-      const post: PostNotification = JSON.parse(message.body);
+    const subscription = subscribe("posts-new", (data) => {
+      const post: PostNotification = JSON.parse(data);
 
       // 작성자 본인이면 무시
       if (loginMemberRef.current?.id === post.authorId) return;
 
       setLatestPost(post);
       callbackRef.current?.(post);
-    }).then((sub) => {
-      if (cancelled) {
-        sub.unsubscribe();
-      } else {
-        subscription = sub;
-      }
     });
 
     return () => {
-      cancelled = true;
-      subscription?.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 

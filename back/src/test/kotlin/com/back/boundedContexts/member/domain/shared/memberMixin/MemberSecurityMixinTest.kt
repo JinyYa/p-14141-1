@@ -1,17 +1,14 @@
 package com.back.boundedContexts.member.domain.shared.memberMixin
 
 import com.back.boundedContexts.member.app.MemberFacade
+import com.back.IntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 
-@SpringBootTest
-@ActiveProfiles("test")
 @Transactional
-class MemberSecurityMixinTest {
+class MemberSecurityMixinTest : IntegrationTest() {
     @Autowired
     private lateinit var memberFacade: MemberFacade
 

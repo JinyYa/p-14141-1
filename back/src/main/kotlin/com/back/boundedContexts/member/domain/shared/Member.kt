@@ -68,7 +68,7 @@ class Member(
 
     companion object {
         lateinit var attrRepository_: MemberAttrRepository
-        val attrRepository by lazy { attrRepository_ }
+        val attrRepository get() = attrRepository_
     }
 
     @field:Column
