@@ -24,7 +24,9 @@ class PostFacade(
     private val postRepository: PostRepository,
     private val postLikeRepository: PostLikeRepository,
     private val eventPublisher: EventPublisher,
+    private val postStompService: PostStompService,
 ) {
+    @Transactional(readOnly = true)
     fun count(): Long = postRepository.count()
 
     @Transactional
@@ -46,8 +48,10 @@ class PostFacade(
         return savedPost
     }
 
+    @Transactional(readOnly = true)
     fun findById(id: Int): Post? = postRepository.findById(id).getOrNull()
 
+    @Transactional(readOnly = true)
     fun findLatest(): Post? = postRepository.findFirstByOrderByIdDesc()
 
     @Transactional
@@ -135,10 +139,20 @@ class PostFacade(
     }
 
     @Transactional
-    fun incrementHit(post: Post) {
+    fun incrementHit(post: Post, actor: Member?): Boolean {
+        if (actor != null && actor.id == post.author.id) return false
+
+        val previousHitCount = post.hitCount
         post.incrementHitCount()
+
+        if (post.published && previousHitCount == 99 && post.hitCount == 100) {
+            postStompService.notifyNewPost(post)
+        }
+
+        return true
     }
 
+    @Transactional(readOnly = true)
     fun findLikedPostIds(liker: Member?, posts: List<Post>): Set<Int> {
         if (liker == null || posts.isEmpty()) return emptySet()
         return postLikeRepository
@@ -147,6 +161,7 @@ class PostFacade(
             .toSet()
     }
 
+    @Transactional(readOnly = true)
     fun findPagedByKw(
         kw: String,
         sort: PostSearchSortType1,
@@ -157,6 +172,7 @@ class PostFacade(
         PageRequest.of(page - 1, pageSize, sort.sortBy)
     )
 
+    @Transactional(readOnly = true)
     fun findPagedByAuthor(
         author: Member,
         kw: String,
@@ -169,6 +185,7 @@ class PostFacade(
         PageRequest.of(page - 1, pageSize, sort.sortBy)
     )
 
+    @Transactional(readOnly = true)
     fun findTemp(author: Member): Post? =
         postRepository.findFirstByAuthorAndTitleAndPublishedFalseOrderByIdAsc(author, "임시글")
 
