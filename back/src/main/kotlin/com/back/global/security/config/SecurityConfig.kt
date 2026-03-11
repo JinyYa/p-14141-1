@@ -35,6 +35,7 @@ class SecurityConfig(
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        val corsSource = corsConfigurationSource()
         http {
             authorizeHttpRequests {
                 authSecurityConfigurer.configure(this)
@@ -67,7 +68,7 @@ class SecurityConfig(
                 }
             }
 
-            cors { corsConfigurationSource = this@SecurityConfig.corsConfigurationSource() }
+            cors { corsConfigurationSource = corsSource }
 
             addFilterBefore<UsernamePasswordAuthenticationFilter>(customAuthenticationFilter)
 
